@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Scout | Discover</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Swiper (Library #1) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Chart.js (Library #2) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Your app -->
+  <script defer src="app.js"></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="./index.html">
+        <span class="brand-dot"></span>
+        <span>Book Scout</span>
+      </a>
+
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a class="active" href="./app.html">Discover</a>
+        <a href="./about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Discover books</h1>
+      <p>Search by keywords or explore a subject. Click any book card to see details.</p>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <label class="label">
+          Search books (keywords)
+          <input id="q" class="input" type="text" placeholder="ex: The Midnight Library..." />
+        </label>
+
+        <button id="btnSearch" class="btn">Search</button>
+
+        <label class="label">
+          Explore by subject
+          <select id="subject">
+            <!-- IMPORTANT: values MUST be valid Open Library subject slugs -->
+            <option value="history">History</option>
+            <option value="romance">Romance</option>
+            <option value="classics">Classics</option>
+            <option value="business">Business</option>
+            <option value="technology">Technology</option>
+
+            <!-- If you want: -->
+            <!-- <option value="data_science">Data Science</option> -->
+            <!-- <option value="machine_learning">Machine Learning</option> -->
+            <!-- <option value="refugees">Refugees</option> -->
+          </select>
+        </label>
+
+        <label class="label">
+          Limit
+          <select id="limit">
+            <option value="12" selected>12</option>
+            <option value="24">24</option>
+            <option value="36">36</option>
+          </select>
+        </label>
+
+        <button id="btnSubject" class="btn secondary">Load Subject</button>
+      </div>
+
+      <div class="meta">
+        <div id="status">Ready.</div>
+        <div>Powered by Open Library</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Results</h2>
+        <div id="hint" class="small"></div>
+      </div>
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Trending Picks</h2>
+        <div class="small">Quick ideas from a public reading log</div>
+      </div>
+
+      <div class="card">
+        <div class="swiper" id="trendingSwiper">
+          <div class="swiper-wrapper" id="trendingWrap"></div>
+
+          <div class="swiper-controls" style="display:flex; gap:10px; margin-top:12px;">
+            <button class="btn secondary swiper-button-prev" type="button">Prev</button>
+            <button class="btn secondary swiper-button-next" type="button">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Subjects Snapshot</h2>
+        <div class="small">Top subject tags from the books you loaded</div>
+      </div>
+
+      <div class="card">
+        <canvas id="subjectsChart" height="120"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="overlay" class="overlay hidden" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <strong id="modalTitle">Book</strong>
+        <button id="closeModal" class="icon">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© 2025 Book Scout • Open Library</div>
+    </div>
+  </footer>
+</body>
+</html>
