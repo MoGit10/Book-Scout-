@@ -32,6 +32,11 @@ function coverUrlFromDoc(doc) {
   // Works from subject API
   if (doc && doc.cover_id) return `https://covers.openlibrary.org/b/id/${doc.cover_id}-M.jpg`;
 
+  // Work detail API
+  if (doc && Array.isArray(doc.covers) && doc.covers[0]) {
+    return `https://covers.openlibrary.org/b/id/${doc.covers[0]}-M.jpg`;
+  }
+
   return "";
 }
 
@@ -52,6 +57,7 @@ function openModal(title, html) {
 }
 
 function closeTheModal() {
+  if (!overlay) return;
   overlay.classList.add("hidden");
   overlay.setAttribute("aria-hidden", "true");
 }
@@ -122,7 +128,28 @@ function renderBooks(books, sourceLabel = "") {
   buildSubjectsChartFromLoadedBooks();
 }
 
-// first api search 
+// Frontend calling your backend POST endpoint
+async function saveBook(book) {
+  const res = await fetch("/api/save-book", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(book),
+  });
+
+  
+  if (!res.ok) {
+    let msg = `Save failed (HTTP ${res.status})`;
+    try {
+      const j = await res.json();
+      if (j?.error) msg = j.error;
+    } catch {}
+    throw new Error(msg);
+  }
+
+  return res.json();
+}
+
+// first api search
 async function searchBooks() {
   const q = (qInput?.value || "").trim();
   if (!q) {
@@ -149,19 +176,16 @@ async function searchBooks() {
   }
 }
 
-// second api fetch for subject 
+// second api fetch for subject
 async function loadSubject() {
   const subject = subjectSelect?.value || "history";
   const limit = Number(limitSelect?.value || "12");
 
-  // Open Library 
   const url = `https://openlibrary.org/subjects/${encodeURIComponent(subject)}.json?limit=${limit}`;
 
   try {
     setStatus(`Loading subject: ${subject}...`);
     const res = await fetch(url);
-
-
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data = await res.json();
@@ -176,7 +200,7 @@ async function loadSubject() {
   }
 }
 
-// third fecth work detail 
+// third fetch work detail + add Save button 
 async function loadWorkDetails(workId) {
   const url = `https://openlibrary.org/works/${encodeURIComponent(workId)}.json`;
 
@@ -205,6 +229,9 @@ async function loadWorkDetails(workId) {
       `
         <p>${escapeHtml(desc)}</p>
         ${subjects.length ? `<div style="margin-top:10px">${subjectBadges}</div>` : ""}
+
+        <button id="saveBookBtn" class="btn" style="margin-top:12px">Save Book</button>
+
         <p style="margin-top:12px">
           <a href="https://openlibrary.org/works/${encodeURIComponent(workId)}" target="_blank" rel="noreferrer">
             View on Open Library →
@@ -212,6 +239,37 @@ async function loadWorkDetails(workId) {
         </p>
       `
     );
+
+    // Wire up the save button after modal content is in the DOM
+    const btn = document.getElementById("saveBookBtn");
+    if (btn) {
+      btn.addEventListener("click", async () => {
+        try {
+          btn.disabled = true;
+          btn.textContent = "Saving...";
+
+          const cover_url = coverUrlFromDoc(work) || null;
+
+          await saveBook({
+            work_id: workId,
+            title,
+            author:
+              (Array.isArray(work?.authors) && work.authors[0]?.name) ||
+              (Array.isArray(work?.authors) && work.authors[0]?.author?.key) ||
+              "Unknown",
+            cover_url,
+          });
+
+          btn.textContent = "Saved!";
+          setStatus("Saved to Supabase.");
+        } catch (err) {
+          console.error(err);
+          btn.disabled = false;
+          btn.textContent = "Save Book";
+          setStatus(err.message || "Save failed. Check console.");
+        }
+      });
+    }
 
     setStatus("Details loaded.");
   } catch (err) {
@@ -221,7 +279,7 @@ async function loadWorkDetails(workId) {
   }
 }
 
-// fourth api fetch My Books API Trending Picks and  Swiper
+// fourth api fetch My Books API Trending Picks and Swiper
 async function loadTrending() {
   if (!trendingWrap) return;
 
@@ -240,7 +298,7 @@ async function loadTrending() {
     for (const entry of entries) {
       const work = entry?.work || {};
       const title = work.title || "Untitled";
-      const key = work.key || ""; 
+      const key = work.key || "";
       const workId = key.startsWith("/works/") ? key.replace("/works/", "") : "";
 
       const coverId = work.cover_id;
@@ -269,7 +327,7 @@ async function loadTrending() {
       trendingWrap.appendChild(slide);
     }
 
-    // init re init Swiper
+    // init / re-init Swiper
     if (swiperInstance) swiperInstance.destroy(true, true);
 
     swiperInstance = new Swiper("#trendingSwiper", {
@@ -293,13 +351,12 @@ async function loadTrending() {
   }
 }
 
-// chart lib 
+// chart lib
 async function buildSubjectsChartFromLoadedBooks() {
   if (!subjectsCanvas) return;
-  if (!window.Chart) return; // Chart.js not loaded yet
+  if (!window.Chart) return;
   if (!lastLoadedWorkIds.length) return;
 
-  // sample a few so you don't spam the API
   const sample = lastLoadedWorkIds.slice(0, 8);
 
   try {
@@ -357,6 +414,5 @@ if (qInput) {
   });
 }
 
-
-loadSubject();   
-loadTrending();  
+loadSubject();
+loadTrending();

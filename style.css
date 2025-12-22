@@ -275,6 +275,17 @@ select{width:220px}
   margin: 4px 6px 0 0;
 }
 
+/* Make sure modal overlay is ALWAYS on top of everything */
+.overlay {
+  z-index: 9999;
+}
+
+/* Keep swiper/nav from floating above the overlay */
+.swiper,
+.swiper-button-next,
+.swiper-button-prev {
+  z-index: 1 !important;
+}
 /* Small responsive touch */
 @media (max-width:520px){
   .input{width:100%}
