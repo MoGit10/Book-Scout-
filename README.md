@@ -86,6 +86,9 @@ Retrieves saved books from the Supabase database.
 2. POST /api/save-book
 Saves a new book into the Supabase database.
 
+book-scout-two.vercel.app/api/saved-books 
+
+
 Both endpoints use Supabase with a Service Role key on the server side.
 
 Required environment variables (Vercel + local):
