@@ -26,10 +26,10 @@ function setStatus(msg) {
 }
 
 function coverUrlFromDoc(doc) {
-  // Search API usually gives cover_i
+  // Search API
   if (doc && doc.cover_i) return `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`;
 
-  // Subjects API gives cover_id sometimes
+  // Works from subject API
   if (doc && doc.cover_id) return `https://covers.openlibrary.org/b/id/${doc.cover_id}-M.jpg`;
 
   return "";
