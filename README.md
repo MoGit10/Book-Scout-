@@ -1,6 +1,12 @@
-# Book Scout
 
-https://book-scout-git-main-dulcinea-metros-projects.vercel.app
+## Book Scout
+
+The first link leads to the live website. It should work properly in most cases, but sometimes the API may take a moment to load. If subject-based results do not appear right away, please be patient and try again. Searching for books by title should work at all times.
+
+**Live Site:**  
+https://book-scout-rho.vercel.app/app.html
+
+**Local Development:**  
 http://127.0.0.1:5500/app.html
 
 Book Scout is a web application that helps users discover books by subject
