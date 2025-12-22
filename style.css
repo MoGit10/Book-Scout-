@@ -1,12 +1,12 @@
-/* SubjectShelf — Minimal (H&M-inspired) */
+/*look*/
 :root{
-  --bg:#f5f0e6;        /* beige close to white */
-  --paper:#fbf7ef;     /* slightly lighter panel */
+  --bg:#f5f0e6;        
+  --paper:#fbf7ef;     
   --text:#111111;
   --muted:#6b6b6b;
   --border:rgba(0,0,0,.12);
   --border2:rgba(0,0,0,.08);
-  --accent:#111111;    /* H&M vibe: black */
+  --accent:#111111;    
   --shadow: 0 10px 30px rgba(0,0,0,.08);
 }
 

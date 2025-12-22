@@ -1,4 +1,3 @@
-// api/save-book.js
 const { createClient } = require("@supabase/supabase-js");
 
 function setCors(res) {
@@ -10,7 +9,7 @@ function setCors(res) {
 module.exports = async function handler(req, res) {
   setCors(res);
 
-  // CORS preflight
+  // preflight
   if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method !== "POST") {
@@ -29,8 +28,7 @@ module.exports = async function handler(req, res) {
   const supabase = createClient(supabaseUrl, serviceKey);
 
   try {
-    // Vercel usually parses JSON body automatically when Content-Type: application/json.
-    // But to be safe, handle string body too.
+    // to be safe handle string body too.
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
     const work_id = String(body?.work_id || "").trim();
@@ -44,7 +42,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Upsert prevents duplicates since you have a UNIQUE constraint on work_id
+// upsert based on work_id
     const { data, error } = await supabase
       .from("saved_books")
       .upsert(

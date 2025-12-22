@@ -1,4 +1,3 @@
-// api/saved-books.js
 const { createClient } = require("@supabase/supabase-js");
 
 function setCors(res) {
@@ -28,7 +27,7 @@ module.exports = async function handler(req, res) {
 
   const supabase = createClient(supabaseUrl, serviceKey);
 
-  // optional: /api/saved-books?limit=25
+// limit query param, default 50, max 100
   const limit = Math.min(parseInt(req.query.limit || "50", 10), 100);
 
   try {
