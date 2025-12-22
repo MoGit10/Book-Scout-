@@ -1,5 +1,8 @@
 # Book Scout
 
+https://book-scout-git-main-dulcinea-metros-projects.vercel.app
+http://127.0.0.1:5500/app.html
+
 Book Scout is a web application that helps users discover books by subject
 using the Open Library API and save selected books to a personal collection.
 The application focuses on subject-based discovery rather than guessing titles,
@@ -80,8 +83,8 @@ Saves a new book into the Supabase database.
 Both endpoints use Supabase with a Service Role key on the server side.
 
 Required environment variables (Vercel + local):
-- `SUPABASE_URL` = your Supabase project URL
-- `SUPABASE_SERVICE_ROLE_KEY` = your Supabase service role key
+- `SUPABASE_URL` = your Supabase project URL (https://jmtrlnclqrcdqupcpflr.supabase.co)
+- `SUPABASE_SERVICE_ROLE_KEY` = your Supabase service role key (sb_secret_mMpSpuseaE4f4nF4N2z7bQ_J63C3ilI)
 
 
 #### POST `/api/save-book`
