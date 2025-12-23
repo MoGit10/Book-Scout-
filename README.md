@@ -7,7 +7,6 @@ The first link leads to the live website. It should work properly in most cases,
 https://book-scout-rho.vercel.app/app.html
 
 **Local Development:**  
-http://127.0.0.1:5500/app.html
 
 Book Scout is a web application that helps users discover books by subject
 using the Open Library API and save selected books to a personal collection.
@@ -78,7 +77,6 @@ vercel dev
 
 ### Server API Endpoints
 Base:
-`https://book-scout-two.vercel.app`
 
 Available endpoints:
 1. GET /api/saved-books
